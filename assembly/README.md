@@ -306,24 +306,9 @@ These addressing modes can affect the value in the base register in three differ
 - **Pre-indexed**   -  The offset is combined with the value in the base - register, and the base register is updated with this new address before being used to access memory.
 - **Post-indexed**  -  The value in the base register alone is used to access memory. Then the the offset is combined with the value in the base register, and the base register is updated with this new address after accessing memory.
 
-To explain the fundamentals of Load and Store operations on ARM, we start with a basic example and continue with three basic offset forms with three different address modes for each offset form. For each example we will use the same piece of assembly code with a different LDR/STR offset form, to keep it simple.
-
-+ Offset form: Immediate value as the offset
-	- Addressing mode: Offset
-	- Addressing mode: Pre-indexed
-	- Addressing mode: Post-indexed
-+ Offset form: Register as the offset
-	- Addressing mode: Offset
-	- Addressing mode: Pre-indexed
-	- Addressing mode: Post-indexed
-+ Offset form: Scaled register as the offset
-	- Addressing mode: Offset
-	- Addressing mode: Pre-indexed
-	- Addressing mode: Post-indexed
-
 ### Load and Store Instruction
 Generally, LDR is used to load something from memory into a register, and STR is used to store something from a register to a memory address.
-[arm-load-store](./images/arm-load-store.png  "ARM simple LOAD-STORE")
+![arm-load-store](./images/arm-load-store.png  "ARM simple LOAD-STORE")
 
 This is how it would look like in a functional assembly program:
 
@@ -335,7 +320,7 @@ When we store something to a memory location, the brackets ([ ]) mean: the value
 
 This sounds more complicated than it actually is, so here is a visual representation of what’s going on with the memory and the registers when executing the code above in a debugger:
 
-[arm-load-store-animation](./images/arm-load-store-gif.gif  "ARM simple LOAD-STORE animation")
+![arm-load-store-animation](./images/arm-load-store-gif.gif  "ARM simple LOAD-STORE animation")
 
 
 The use of an equals sign (=) at the start of the second operand of the LDR instruction indicates the use of the LDR pseudo-instruction. This pseuo-instruction is used to load an arbitrary 32-bit constant value into a register with a single instruction despite the fact that the ARM instruction set only supports immediate values in a much smaller range.
@@ -360,7 +345,7 @@ Here we use an immediate (integer) as an offset. This value is added or subtract
 ```
 
 Visual representation of above code:
-[arm_load-store-immediate-offset](./images/arm-load-store-offset-im.gif "Load-store immediate offset")
+![arm_load-store-immediate-offset](./images/arm-load-store-offset-im.gif "Load-store immediate offset")
 
 ### Offset form: Register as the offset.
 ```
@@ -401,9 +386,8 @@ This means that the barrel shifter is used to scale the offset. An example usage
 The first STR operation uses the offset address mode and stores the value found in R2 at the memory location calculated from [r1, r2, LSL#2], which means that it
 takes the value in R1 as a base (in this case, R1 contains the memory address of var2), then it takes the value in R2 (0x3), and shifts it left by 2.
  The picture below is an attempt to visualize how the memory location is calculated with [r1, r2, LSL#2].
-[arm_load-store-register-offset-shift](./images/ arm-load-store-barrel-shift.png "Load-store register offset shift")
+![arm_load-store-register-offset-shift](./images/ arm-load-store-barrel-shift.png "Load-store register offset shift")
 
-#Reference
-
+# Reference
 1. [Peter Cockerell Book](http://www.peter-cockerell.net/aalp/html/frames.html)
 2. [Azeria Labs](https://azeria-labs.com/writing-arm-assembly-part-1/)
