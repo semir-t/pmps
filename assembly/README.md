@@ -390,7 +390,7 @@ The first STR operation uses the offset address mode and stores the value found 
 takes the value in R1 as a base (in this case, R1 contains the memory address of var2), then it takes the value in R2 (0x3), and shifts it left by 2.
  The picture below is an attempt to visualize how the memory location is calculated with [r1, r2, LSL#2].
 
-![arm_load-store-register-offset-shift](./images/ arm-load-store-barrel-shift.png "Load-store register offset shift")
+![arm_load-store-register-offset-shift](./images/arm-load-store-barrel-shift.png "Load-store register offset shift")
 
 # Reference
 1. [Peter Cockerell Book](http://www.peter-cockerell.net/aalp/html/frames.html)
