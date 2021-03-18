@@ -5,7 +5,7 @@ There are two approaches that can be used for compiling the firmware:
 1. Using the Makefile
 2. Using the STMCubeIDE application (https://www.st.com/en/development-tools/stm32cubeide.html)
 
-Provided examples are equipped with dedicated Makefile and STMCubeIDE project file. This means that any example can be compiled using the above approach.
+Provided examples are equipped with dedicated Makefile and STMCubeIDE project file. This means that any example can be compiled using the Makefile or STMCubeIDE. 
 
 # Hardware requirements
 For this course we will need following components:
