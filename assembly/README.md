@@ -334,6 +334,11 @@ This sounds more complicated than it actually is, so here is a visual representa
 
 [arm-load-store-animation](./images/arm-load-store-gif.gif  "ARM simple LOAD-STORE animation")
 
+
+The use of an equals sign (=) at the start of the second operand of the LDR instruction indicates the use of the LDR pseudo-instruction. This pseuo-instruction is used to load an arbitrary 32-bit constant value into a register with a single instruction despite the fact that the ARM instruction set only supports immediate values in a much smaller range.
+
+If the value after the = is known by the assembler and fits in with the allowed range of an immediate value for the MOV or MVN instruction then a MOV or MVN instruction is generated. Otherwise the constant value is put into the literal pool, and a PC-relative LDR instruction is used to load the value into the register.
+
 ###Offset form: Immediate value as the offset
 ```
 STR    Ra, [Rb, imm]
