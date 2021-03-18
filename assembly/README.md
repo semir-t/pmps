@@ -308,6 +308,7 @@ These addressing modes can affect the value in the base register in three differ
 
 ### Load and Store Instruction
 Generally, LDR is used to load something from memory into a register, and STR is used to store something from a register to a memory address.
+
 ![arm-load-store](./images/arm-load-store.png  "ARM simple LOAD-STORE")
 
 This is how it would look like in a functional assembly program:
@@ -345,6 +346,7 @@ Here we use an immediate (integer) as an offset. This value is added or subtract
 ```
 
 Visual representation of above code:
+
 ![arm_load-store-immediate-offset](./images/arm-load-store-offset-im.gif "Load-store immediate offset")
 
 ### Offset form: Register as the offset.
@@ -364,7 +366,8 @@ This offset form uses a register as an offset. An example usage of this offset f
 ```
 
 Visual representation of the above code:
-[arm_load-store-register-offset](./images/arm-load-store-offset-ref.gif "Load-store register offset")
+
+![arm_load-store-register-offset](./images/arm-load-store-offset-ref.gif "Load-store register offset")
 
 ### Offset form: Scaled register as the offset
 ```
@@ -386,6 +389,7 @@ This means that the barrel shifter is used to scale the offset. An example usage
 The first STR operation uses the offset address mode and stores the value found in R2 at the memory location calculated from [r1, r2, LSL#2], which means that it
 takes the value in R1 as a base (in this case, R1 contains the memory address of var2), then it takes the value in R2 (0x3), and shifts it left by 2.
  The picture below is an attempt to visualize how the memory location is calculated with [r1, r2, LSL#2].
+
 ![arm_load-store-register-offset-shift](./images/ arm-load-store-barrel-shift.png "Load-store register offset shift")
 
 # Reference
