@@ -46,9 +46,7 @@ example a signed overflow on an addition.</li>
 to digital signal processing (DSP </li>
 <li> <b>GE</b> - The Greater than or Equal flags</li>
 </ul>
-
 # ARM Instruction set
-
 ## Syntax
 General syntax of the ARM instruction is:
 ```
@@ -66,7 +64,6 @@ where:
 
 Following images describes format of the ARM instruction.
 ![ARM-Instruction-Format](./images/arm-instruction-format.png  "ARM Instruction format")
-
 ## Data processing
 ### MOV
 MOV instruction is used for loading the immediate value to register and for copying value from one register to another. Basic sytanx of the MOV instruction is:
@@ -218,7 +215,7 @@ BNE.W  dloop        ; Branch instruction can only be used in the last instructio
 Wrong syntax:
 
 ```
-IT     NE           ; Next instruction is conditional     
+IT     NE           ; Next instruction is conditional
 ADD    R0, R0, R1   ; Syntax error: no condition code used in IT block.
 ```
 
@@ -281,7 +278,10 @@ Here are the conditional codes and theire opposite:
 <td colspan="2">	There is no opposite to AL</td>
 </tr>
 </tbody></table>
+
+
 ## Flow control
+
 For the flow control we can use following instructions:
 ```
 b <cond> 	label	; jump to the label subroutine
@@ -289,7 +289,113 @@ bl <cond> 	label	; coppy address of the next instruction to the LR and jump to t
 bx<cond>	label	; coppy content of the LR to PC (this is euqal to return from subroutine)
 ```
 
+## Memory Instructions
+ARM uses a load-store model for memory access which means that only load/store (LDR and STR) instructions can access memory. While on x86 most instructions are allowed to directly operate on data in memory, on ARM data must be moved from memory into registers before being operated on. This means that incrementing a 32-bit value at a particular memory address on ARM would require three types of instructions (load, increment, and store) to first load the value at a particular address into a register, increment it within the register, and store it back to the memory from the register.
+
+### Addressing mode
+ARM arhitecture supports 3 addressing modes:
+- Immediate
+- Register
+- Scaled register
+
+These addressing modes can affect the value in the base register in three different ways:
+- **Offset**    - The value in the base register is unchanged.
+- **Pre-indexed**   -  The offset is combined with the value in the base - register, and the base register is updated with this new address before being used to access memory.
+- **Post-indexed**  -  The value in the base register alone is used to access memory. Then the the offset is combined with the value in the base register, and the base register is updated with this new address after accessing memory.
+
+To explain the fundamentals of Load and Store operations on ARM, we start with a basic example and continue with three basic offset forms with three different address modes for each offset form. For each example we will use the same piece of assembly code with a different LDR/STR offset form, to keep it simple.
+
++ Offset form: Immediate value as the offset
+	- Addressing mode: Offset
+	- Addressing mode: Pre-indexed
+	- Addressing mode: Post-indexed
++ Offset form: Register as the offset
+	- Addressing mode: Offset
+	- Addressing mode: Pre-indexed
+	- Addressing mode: Post-indexed
++ Offset form: Scaled register as the offset
+	- Addressing mode: Offset
+	- Addressing mode: Pre-indexed
+	- Addressing mode: Post-indexed
+
+### Load and Store Instruction
+Generally, LDR is used to load something from memory into a register, and STR is used to store something from a register to a memory address.
+[arm-load-store](./images/arm-load-store.png  "ARM simple LOAD-STORE")
+
+This is how it would look like in a functional assembly program:
+
+At the bottom we have our Literal Pool (a memory area in the same code section to store constants, strings, or offsets that others can reference in a position-independent manner) where we store the memory addresses of var1 and var2 (defined in the data section at the top) using the labels adr_var1 and adr_var2. The first LDR loads the address of var1 into register R0. The second LDR does the same for var2 and loads it to R1. Then we load the value stored at the memory address found in R0 to R2, and store the value found in R2 to the memory address found in R1.
+
+When we load something into a register, the brackets ([ ]) mean: the value found in the register between these brackets is a memory address we want to load something from.
+
+When we store something to a memory location, the brackets ([ ]) mean: the value found in the register between these brackets is a memory address we want to store something to.
+
+This sounds more complicated than it actually is, so here is a visual representation of what’s going on with the memory and the registers when executing the code above in a debugger:
+
+[arm-load-store-animation](./images/arm-load-store-gif.gif  "ARM simple LOAD-STORE animation")
+
+###Offset form: Immediate value as the offset
+```
+STR    Ra, [Rb, imm]
+LDR    Ra, [Rc, imm]
+```
+
+Here we use an immediate (integer) as an offset. This value is added or subtracted from the base register (R1 in the example below) to access data at an offset known at compile time.
+
+```
+	ldr r0, adr_var1  @ load the memory address of var1 via label adr_var1 into R0
+	ldr r1, adr_var2  @ load the memory address of var2 via label adr_var2 into R1
+	ldr r2, [r0]      @ load the value (0x03) at memory address found in R0 to register R2
+	str r2, [r1, #2]  @ address mode: offset. Store the value found in R2 (0x03) to the memory address found in R1 plus 2. Base register (R1) unmodified.
+	str r2, [r1, #4]! @ address mode: pre-indexed. Store the value found in R2 (0x03) to the memory address found in R1 plus 4. Base register (R1) modified: R1 = R1+4
+	ldr r3, [r1], #4  @ address mode: post-indexed. Load the value at memory address found in R1 to register R3. Base register (R1) modified: R1 = R1+4
+```
+
+Visual representation of above code:
+[arm_load-store-immediate-offset](./images/arm-load-store-offset-im.gif "Load-store immediate offset")
+
+### Offset form: Register as the offset.
+```
+STR    Ra, [Rb, Rc]
+LDR    Ra, [Rb, Rc]
+```
+This offset form uses a register as an offset. An example usage of this offset form is when your code wants to access an array where the index is computed at run-time.
+```
+	ldr r0, adr_var1  @ load the memory address of var1 via label adr_var1 to R0 
+    ldr r1, adr_var2  @ load the memory address of var2 via label adr_var2 to R1 
+    ldr r2, [r0]      @ load the value (0x03) at memory address found in R0 to R2
+    str r2, [r1, r2]  @ address mode: offset. Store the value found in R2 (0x03) to the memory address found in R1 with the offset R2 (0x03). Base register unmodified.   
+    @pre-index and post-indexed don't work in .thumb mode
+    str r2, [r1, r2]! @ address mode: pre-indexed. Store value found in R2 (0x03) to the memory address found in R1 with the offset R2 (0x03). Base register modified: R1 = R1+R2. 
+    ldr r3, [r1], r2  @ address mode: post-indexed. Load value at memory address found in R1 to register R3. Then modify base register: R1 = R1+R2.
+```
+
+Visual representation of the above code:
+[arm_load-store-register-offset](./images/arm-load-store-offset-ref.gif "Load-store register offset")
+
+### Offset form: Scaled register as the offset
+```
+LDR    Ra, [Rb, Rc, <shifter>]
+STR    Ra, [Rb, Rc, <shifter>]
+```
+The third offset form has a scaled register as the offset. In this case, Rb is the base register and Rc is an immediate offset (or a register containing an immediate value) left/right shifted (<shifter>) to scale the immediate.
+This means that the barrel shifter is used to scale the offset. An example usage of this offset form would be for loops to iterate over an array. 
+
+```
+	ldr r0, adr_var1         @ load the memory address of var1 via label adr_var1 to R0
+    ldr r1, adr_var2         @ load the memory address of var2 via label adr_var2 to R1
+    ldr r2, [r0]             @ load the value (0x03) at memory address found in R0 to R2
+    str r2, [r1, r2, LSL#2]  @ address mode: offset. Store the value found in R2 (0x03) to the memory address found in R1 with the offset R2 left-shifted by 2. Base register (R1) unmodified.
+    str r2, [r1, r2, LSL#2]! @ address mode: pre-indexed. Store the value found in R2 (0x03) to the memory address found in R1 with the offset R2 left-shifted by 2. Base register modified: R1 = R1 + R2<<2
+    ldr r3, [r1], r2, LSL#2  @ address mode: post-indexed. Load value at memory address found in R1 to the register R3. Then modifiy base register: R1 = R1 + R2<<2
+```
+
+The first STR operation uses the offset address mode and stores the value found in R2 at the memory location calculated from [r1, r2, LSL#2], which means that it
+takes the value in R1 as a base (in this case, R1 contains the memory address of var2), then it takes the value in R2 (0x3), and shifts it left by 2.
+ The picture below is an attempt to visualize how the memory location is calculated with [r1, r2, LSL#2].
+[arm_load-store-register-offset-shift](./images/ arm-load-store-barrel-shift.png "Load-store register offset shift")
+
 #Reference
 
-1. [Peter Cockerell Book](http://www.peter-cockerell.net/aalp/html/frames.html)  
+1. [Peter Cockerell Book](http://www.peter-cockerell.net/aalp/html/frames.html)
 2. [Azeria Labs](https://azeria-labs.com/writing-arm-assembly-part-1/)
