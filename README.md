@@ -1,7 +1,12 @@
 # pmps
 Learning material and examples for course AR207 at FE Tuzla
 # Software requirements
-We are using hte Makefile to compile the firmware. Additionaly, for each example there is the STMCubeIDE project that can be importerd to this IDE. STMCubeIDE can be downloaded from the following link (https://www.st.com/en/development-tools/stm32cubeide.html)
+There are two approaches that can be used for compiling the firmware:
+1. Using the Makefile
+2. Using the STMCubeIDE application (https://www.st.com/en/development-tools/stm32cubeide.html)
+
+Provided examples are equipped with dedicated Makefile and STMCubeIDE project file. This means that any example can be compiled using the above approach.
+
 # Hardware requirements
 For this course we will need following components:
 - STM32F407 Disco Board (https://www.st.com/en/evaluation-tools/stm32f4discovery.html)
