@@ -7,6 +7,9 @@ There are two approaches that can be used for compiling the firmware:
 
 Provided examples are equipped with dedicated Makefile and STMCubeIDE project file. This means that any example can be compiled using the Makefile or STMCubeIDE. 
 
+If you get the following issue while trying to run the code: "Could not determine GDB version using command: arm-none-eabi-gdb --version",
+you are probably missing libncurses5 dependency which can easily be installed by running `sudo apt-get install libncurses5`.
+
 # Hardware requirements
 For this course we will need following components:
 - STM32F407 Disco Board (https://www.st.com/en/evaluation-tools/stm32f4discovery.html)
